@@ -1,7 +1,15 @@
-// Variable overrides first
-$primary: #900;
-$enable-shadows: true;
-$prefix: "mo-";
-
 // Then import Bootstrap
-@import "../node_modules/bootstrap/scss/bootstrap";
+@use "~bootstrap/scss/bootstrap";
+
+
+*{
+    font-family: "Dosis", serif;
+}
+
+body{
+    background-color: rgb(237, 237, 237);
+}
+
+.imagelab{
+    height: 50px;
+}

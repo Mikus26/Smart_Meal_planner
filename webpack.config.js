@@ -1,72 +1,52 @@
 const Encore = require('@symfony/webpack-encore');
+const path = require('path');
 
-// Manually configure the runtime environment if not already configured yet by the "encore" command.
-// It's useful when you use tools that rely on webpack.config.js file.
+// Configure l'environnement d'exécution si ce n'est pas déjà fait
 if (!Encore.isRuntimeEnvironmentConfigured()) {
     Encore.configureRuntimeEnvironment(process.env.NODE_ENV || 'dev');
 }
 
 Encore
-    // directory where compiled assets will be stored
+    // Répertoire où les fichiers compilés seront stockés
     .setOutputPath('public/build/')
-    // public path used by the web server to access the output path
+    // Chemin public utilisé par le serveur web pour accéder au répertoire de sortie
     .setPublicPath('/build')
-    // only needed for CDN's or subdirectory deploy
-    //.setManifestKeyPrefix('build/')
-
-    /*
-     * ENTRY CONFIG
-     *
-     * Each entry will result in one JavaScript file (e.g. app.js)
-     * and one CSS file (e.g. app.css) if your JavaScript imports CSS.
-     */
+    // Ajoute une entrée principale (JavaScript et CSS)
     .addEntry('app', './assets/app.js')
 
-    // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
+    // Active le découpage des fichiers pour une meilleure optimisation
     .splitEntryChunks()
 
-    // will require an extra script tag for runtime.js
-    // but, you probably want this, unless you're building a single-page app
+    // Nécessite un tag supplémentaire pour runtime.js
     .enableSingleRuntimeChunk()
 
-    /*
-     * FEATURE CONFIG
-     *
-     * Enable & configure other features below. For a full
-     * list of features, see:
-     * https://symfony.com/doc/current/frontend.html#adding-more-features
-     */
+    // Fonctionnalités supplémentaires
     .cleanupOutputBeforeBuild()
     .enableBuildNotifications()
     .enableSourceMaps(!Encore.isProduction())
-    // enables hashed filenames (e.g. app.abc123.css)
     .enableVersioning(Encore.isProduction())
 
-    // configure Babel
-    // .configureBabel((config) => {
-    //     config.plugins.push('@babel/a-babel-plugin');
-    // })
-
-    // enables and configure @babel/preset-env polyfills
+    // Configure Babel pour les polyfills
     .configureBabelPresetEnv((config) => {
         config.useBuiltIns = 'usage';
         config.corejs = '3.38';
     })
 
-    // enables Sass/SCSS support
-    //.enableSassLoader()
+    // Active le support de Sass/SCSS
+    .enableSassLoader((options) => {
+        options.sassOptions = {
+            quietDeps: true, // Réduit les avertissements provenant des dépendances
+            includePaths: [path.resolve(__dirname, 'node_modules')]
+        };
+    })
 
-    // uncomment if you use TypeScript
-    //.enableTypeScriptLoader()
+    // Ajout d'alias pour simplifier les imports
+    .addAliases({
+        '~': path.resolve(__dirname, 'node_modules'),
+        '@': path.resolve(__dirname, 'assets')
+    })
 
-    // uncomment if you use React
-    //.enableReactPreset()
-
-    // uncomment to get integrity="..." attributes on your script & link tags
-    // requires WebpackEncoreBundle 1.4 or higher
-    //.enableIntegrityHashes(Encore.isProduction())
-
-    // uncomment if you're having problems with a jQuery plugin
+    // Fournit automatiquement jQuery si nécessaire (décommenter si utilisé)
     //.autoProvidejQuery()
 ;
 
