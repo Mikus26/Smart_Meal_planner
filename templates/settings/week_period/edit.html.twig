@@ -5,9 +5,10 @@
 {% block body %}
     <h1>Edit WeekPeriod</h1>
 
-    {{ include('week_period/settings/_form.html.twig', {'button_label': 'Update'}) }}
+    {{ include('settings/week_period/_form.html.twig', {'button_label': 'Update'}) }}
+    <div class="d-flex justify-content-center gap-3 mt-3" >
 
-    <a href="{{ path('app_week_period_index') }}">back to list</a>
 
-    {{ include('settings/week_period/_delete_form.html.twig') }}
+
+    </div>
 {% endblock %}
